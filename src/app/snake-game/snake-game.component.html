@@ -1,0 +1,49 @@
+<div>
+  <div class="scores">
+    <h1 id="score">{{ score.toString().padStart(3, '0') }}</h1>
+    <h1 id="highScore" [style.display]="highScore > 0 ? 'block' : 'none'">
+      {{ highScore.toString().padStart(3, '0') }}
+    </h1>
+  </div>
+  <div class="game-border-1">
+    <div class="game-border-2">
+      <div class="game-border-3">
+        <div id="game-board" #gameBoard></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h1 id="instruction-text" *ngIf="!gameStarted && !isRevivePending">
+  Press spacebar to start the game
+</h1>
+<img id="logo" *ngIf="!gameStarted && !isRevivePending" src="assets/snake-game-ai-gen.png" alt="snake-logo" />
+
+<div class="revive-modal" *ngIf="isRevivePending">
+  <h2>Du bist gestorben!</h2>
+  <p>Übersetze 3 Vokabeln richtig, um weiterzuspielen.</p>
+
+  <div *ngIf="reviveWords.length === 3 && currentReviveWordIndex < 3">
+    <h3>Frage {{ currentReviveWordIndex + 1 }} / 3:</h3>
+    <p class="vocab-question">
+      Was heißt "<strong>{{ reviveWords[currentReviveWordIndex].wordEN }}</strong>" auf Deutsch?
+    </p>
+
+    <input
+      type="text"
+      [(ngModel)]="userReviveAnswer"
+      (keydown.enter)="handleReviveAnswer()"
+      placeholder="Deine Antwort..."
+      autocomplete="off"
+    />
+    <button (click)="handleReviveAnswer()">Bestätigen</button>
+
+    <p *ngIf="currentReviveWordIndex > 0">
+      Bisher richtig: {{ reviveCorrectCount }} / {{ currentReviveWordIndex }}
+    </p>
+  </div>
+
+  <div *ngIf="reviveWords.length < 3">
+    <p>Lade Vokabeln...</p>
+  </div>
+</div>
